@@ -8,3 +8,7 @@ Based on the links below.  Added another service through DI and referenced the c
 
 
 The docker-compose and docker file are more suited to development work but a suitable production docker file wouldn't be difficult to create.
+
+To run the service just run the following commands.
+
+`docker-compose up`
