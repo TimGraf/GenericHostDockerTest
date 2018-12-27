@@ -10,26 +10,24 @@ namespace GenericHostDockerTest.Services
     internal class TimedHostedService : IHostedService, IDisposable
     {
         private readonly ILogger _logger;
-        private readonly IDateTimeService _dateTimeService;
+        private readonly IGenericService _genericService;
         private readonly Int16 _pollingInterval;
         private Timer _timer;
 
-        public TimedHostedService(ILogger<TimedHostedService> logger, IConfiguration config, IDateTimeService dateTimeService)
+        public TimedHostedService(ILogger<TimedHostedService> logger, IConfiguration config, IGenericService genericService)
         {
             _logger = logger;
-            _dateTimeService = dateTimeService;
+            _genericService = genericService;
 
             var serviceConfig = config.GetSection("TimedService");
 
             _pollingInterval = Int16.Parse(serviceConfig["PollingIntervalSeconds"]);
-
             _logger.LogInformation($"Timed Service configured with polling interval: {_pollingInterval} seconds.");
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Timed Background Service is starting.");
-
             _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(_pollingInterval));
 
             return Task.CompletedTask;
@@ -38,16 +36,12 @@ namespace GenericHostDockerTest.Services
         private void DoWork(object state)
         {
             _logger.LogInformation("Timed Background Service is working.");
-
-            var dateTimeData = _dateTimeService.GetDateTimeData();
-
-            _logger.LogInformation($"Date Time Data: {dateTimeData}");
+            _genericService.DoWork();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Timed Background Service is stopping.");
-
             _timer?.Change(Timeout.Infinite, 0);
 
             return Task.CompletedTask;

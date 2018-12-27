@@ -32,7 +32,7 @@ namespace GenericHostDockerTest
                 {
                     services.AddHostedService<LifetimeEventsHostedService>();
                     services.AddHostedService<TimedHostedService>();
-                    services.AddTransient<IDateTimeService, DateTimeService>();
+                    services.AddTransient<IGenericService, DateTimeService>();
                 })
                 .ConfigureLogging((hostContext, configLogging) =>
                 {
